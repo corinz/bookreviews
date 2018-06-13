@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Corin's Books</title>
+      <!-- Include HTML Header -->
+      {% include 'includes/html-header.html' %}
+
+   </head>
+   <body class="text-center" id="signupfail">
+      <div id="wrapper">
+         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+            <!--Body Header & Navigation-->
+            {% include 'includes/header-nav.html' %}
+            <!--Main Body Section & Portrait-->
+            <main class="inner cover">
+               <h1 class="cover-heading">Sorry, the user name {{name}} has been taken!</h1>
+               <br/>
+
+            </main>
+
+         </div>
+         <br/><br/><br/>
+         <!-- Include Footer-->
+         {% include 'includes/footer.html' %}
+      </div>
+   </body>
+</html>

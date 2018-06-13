@@ -1,0 +1,15 @@
+        <!--Body Header & Navigation-->
+        <header class="masthead">
+            <div class="inner">
+                <nav class="nav nav-masthead justify-content-right">
+                    <a class="nav-link" href="/" id="home">Home</a>
+                    {% if loggedIn == 1 %}
+                    <a class="nav-link" href="/logout" id="logout">Logout of {{username}}.</a>
+                    {% else %}
+                    <a class="nav-link" href="/signup" id="signup">Sign Up.</a>
+                    <a class="nav-link" href="/login" id="login">Log in.</a>
+                    {% endif %}
+
+                </nav>
+            </div>
+        </header>

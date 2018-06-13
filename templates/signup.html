@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Corin's Books</title>
+      <!-- Include HTML Header -->
+      {% include 'includes/html-header.html' %}
+
+   </head>
+   <body class="text-center" id="about">
+      <div id="wrapper">
+         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+            <!--Body Header & Navigation-->
+            {% include 'includes/header-nav.html' %}
+            <!--Main Body Section & Portrait-->
+            <main class="inner cover">
+               <p class="lead">Register for new account:</p>
+               <form action="{{ url_for('signupsuccess') }}" method="post">
+                   <input type="text" name="username" placeholder="Enter Desired Username">
+                   <br>
+                   <input type="password" name="password" placeholder="Enter Desired Password">
+                   <button>Submit</button>
+               </form>
+            </main>
+
+         </div>
+         <br/><br/><br/>
+         <!-- Include Footer-->
+         {% include 'includes/footer.html' %}
+      </div>
+   </body>
+</html>
