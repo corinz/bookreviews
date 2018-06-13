@@ -46,9 +46,9 @@ def signupsuccess():
     #TO DO:
 
     # If username doesnt exist
-    if db.execute("SELECT * FROM users WHERE usernames = :username", {"username": usernm}).rowcount == 0:
+    if db.execute("SELECT * FROM users WHERE username = :username", {"username": usernm}).rowcount == 0:
         # Inset/Commit changes
-        db.execute("INSERT INTO users (usernames, passwords) VALUES (:username, :password)",{"username": usernm, "password": passwd})
+        db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",{"username": usernm, "password": passwd})
         db.commit()
         loggedIn = 1
         return render_template("signupsuccess.html", name=usernm, username=usernm,loggedIn=loggedIn)
@@ -69,13 +69,13 @@ def signin():
     #TO DO:
 
     # If username doesnt exist
-    if db.execute("SELECT * FROM users WHERE usernames = :username", {"username": usernm}).rowcount == 0:
+    if db.execute("SELECT * FROM users WHERE username = :username", {"username": usernm}).rowcount == 0:
         loggedIn = 0
         return render_template("signinfailed.html", name=usernm,loggedIn=loggedIn)
 
     # Fetch password associated w/usernm and test
-    passwd_fetch = db.execute("SELECT passwords FROM users WHERE usernames = :username", {"username": usernm}).fetchone()
-    if passwd == passwd_fetch.passwords:
+    passwd_fetch = db.execute("SELECT password FROM users WHERE global usernm = :username", {"username": usernm}).fetchone()
+    if passwd == passwd_fetch.password:
         loggedIn = 1
         return render_template("signinsuccess.html", username=usernm, loggedIn=loggedIn)
     else:
@@ -90,7 +90,6 @@ def login():
     global usernm, passwd, loggedIn
     return render_template("login.html",loggedIn=loggedIn)
 
-
 # Log Out
 @app.route("/logout")
 def logout():
@@ -101,3 +100,24 @@ def logout():
     loggedIn = 0
 
     return render_template("logout.html",loggedIn=loggedIn)
+
+# Search
+@app.route("/search")
+def search():
+    global usernm, passwd, loggedIn
+    return render_template("search.html",username=usernm,loggedIn=loggedIn)
+
+# Search Results
+@app.route("/searchresults", methods=["POST"])
+def searchresults():
+    global usernm, passwd, loggedIn
+    query = request.form.get("search_criteria")
+
+    # flasksqlalchemy query here
+    books = Book.query.get(query)
+
+    # old
+    #results = db.execute("SELECT * FROM books WHERE title LIKE :query", {"query":query}).fetchall
+
+
+    return render_template("searchresults.html", books=books)

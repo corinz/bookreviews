@@ -14,15 +14,13 @@
             {% include 'includes/header-nav.html' %}
             <!--Main Body Section & Portrait-->
             <main class="inner cover">
-               <p class="lead">Sign in to existing account:</p>
+               <p class="lead">Search for a book:</p>
 
-               <form action="{{ url_for('signin') }}" method="post">
-                   <input type="text" name="username" placeholder="Username">
+               <form action="{{ url_for('searchresults') }}" method="post">
+                   <input type="text" name="search_criteria" placeholder="ISBN, title, author or year">
                    <br>
-                   <input type="password" name="password" placeholder="Enter Password">
                    <button>Submit</button>
                </form>
-
 
             </main>
 

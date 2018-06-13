@@ -16,7 +16,7 @@ def main():
     reader = csv.reader(f)
 
     # Create new table, 'books'
-    db.execute("CREATE TABLE books(id SERIAL PRIMARY KEY,isbn VARCHAR NOT NULL,title VARCHAR NOT NULL,author VARCHAR NOT NULL, year INTEGER NOT NULL)")
+    # db.execute("CREATE TABLE books(id SERIAL PRIMARY KEY,isbn VARCHAR NOT NULL,title VARCHAR NOT NULL,author VARCHAR NOT NULL, year INTEGER NOT NULL)")
 
     # For each row in csv
     for isbn, title, author, year in reader:

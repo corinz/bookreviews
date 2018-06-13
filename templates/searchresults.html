@@ -7,15 +7,23 @@
       {% include 'includes/html-header.html' %}
 
    </head>
-   <body class="text-center" id="signupsuccess">
+   <body class="text-center" id="searchresults">
       <div id="wrapper">
          <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <!--Body Header & Navigation-->
             {% include 'includes/header-nav.html' %}
             <!--Main Body Section & Portrait-->
             <main class="inner cover">
-               <h1 class="cover-heading">Thank you, {{name}} for signing up!</h1>
-               <br/>
+               <p class="lead">Search results:</p>
+
+               <ul>
+                   {% for book in books %}
+                       <li>
+                       {{ book.author }} , {{ book.year }}
+                       </li>
+                   {% endfor %}
+               </ul>
+
 
             </main>
 
