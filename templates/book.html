@@ -22,6 +22,18 @@
                        </li>
                    {% endfor %}
                </ul>
+
+               {% if loggedIn == 0 %}
+               <p> Please log in to add a review </p>
+
+               {% else %}
+               <form action="{{ url_for('addreview') }}" method="post">
+                   <input type="text" name="review" placeholder="Enter your review">
+                   <input type="hidden" name="book_id" value = {{book.id}}>
+                   <br><button>Submit</button>
+               </form>
+
+               {% endif %}
             </main>
 
          </div>
