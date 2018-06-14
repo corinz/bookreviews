@@ -24,6 +24,12 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
+    def add_user(username, password):
+        u = User(username=username, password=password)
+        db.session.add(u)
+        db.session.commit()
+
+
 class Review(db.Model):
     __tablename__ = "reviews"
     id = db.Column(db.Integer, primary_key=True)

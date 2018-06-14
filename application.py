@@ -1,23 +1,16 @@
 import os
 
-from flask import Flask, session, render_template, request
-from flask_session import Session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from flask import Flask, render_template, request
+from db_models import *
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ynorvjldptczsr:642db89f29e57eb14c168c81dd9088b79e279edabda65bef8b391d46c31f9d0b@ec2-54-243-137-182.compute-1.amazonaws.com:5432/d1r7oflel96ou"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
 
 # Check for environment variable
 #if not os.getenv("DATABASE_URL"):
 #    raise RuntimeError("DATABASE_URL is not set")
-
-engine = create_engine("postgres://ynorvjldptczsr:642db89f29e57eb14c168c81dd9088b79e279edabda65bef8b391d46c31f9d0b@ec2-54-243-137-182.compute-1.amazonaws.com:5432/d1r7oflel96ou")
-db = scoped_session(sessionmaker(bind=engine))
-
-# Configure session to use filesystem
-#app.config["SESSION_PERMANENT"] = False
-#app.config["SESSION_TYPE"] = "filesystem"
-#Session(app)
 
 # Username/Password
 usernm = None
@@ -36,8 +29,8 @@ def signup():
     return render_template("signup.html",loggedIn=loggedIn)
 
 # Sign Up Successful
-@app.route("/signupsuccess", methods=["POST"])
-def signupsuccess():
+@app.route("/signupstatus", methods=["POST"])
+def signupstatus():
     global usernm, passwd, loggedIn
     usernm = request.form.get("username")
     passwd = request.form.get("password")
@@ -46,17 +39,17 @@ def signupsuccess():
     #TO DO:
 
     # If username doesnt exist
-    if db.execute("SELECT * FROM users WHERE username = :username", {"username": usernm}).rowcount == 0:
-        # Inset/Commit changes
-        db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",{"username": usernm, "password": passwd})
-        db.commit()
+    if User.query.filter_by(username=usernm).first() == None:
+        # Insert User & Commit changes
+        User.add_user(username=usernm, password=passwd)
         loggedIn = 1
         return render_template("signupsuccess.html", name=usernm, username=usernm,loggedIn=loggedIn)
     else:
+        tempUsernm = usernm
         usernm = None
         passwd = None
         loggedIn = 0
-        return render_template("signupfail.html", name=usernm,loggedIn=loggedIn)
+        return render_template("signupfail.html", name=tempUsernm,loggedIn=loggedIn)
 
 # Sign In
 @app.route("/signin", methods=["POST"])
@@ -69,12 +62,13 @@ def signin():
     #TO DO:
 
     # If username doesnt exist
-    if db.execute("SELECT * FROM users WHERE username = :username", {"username": usernm}).rowcount == 0:
+    if User.query.filter_by(username=usernm).first() == None:
         loggedIn = 0
         return render_template("signinfailed.html", name=usernm,loggedIn=loggedIn)
 
     # Fetch password associated w/usernm and test
-    passwd_fetch = db.execute("SELECT password FROM users WHERE global usernm = :username", {"username": usernm}).fetchone()
+    passwd_fetch = User.query.filter_by(username=usernm).first()
+    #passwd_fetch = db.execute("SELECT password FROM users WHERE global usernm = :username", {"username": usernm}).fetchone()
     if passwd == passwd_fetch.password:
         loggedIn = 1
         return render_template("signinsuccess.html", username=usernm, loggedIn=loggedIn)
@@ -114,10 +108,9 @@ def searchresults():
     query = request.form.get("search_criteria")
 
     # flasksqlalchemy query here
-    books = Book.query.get(query)
+    books = Book.query.filter_by(title=query)
 
     # old
     #results = db.execute("SELECT * FROM books WHERE title LIKE :query", {"query":query}).fetchall
-
 
     return render_template("searchresults.html", books=books)
