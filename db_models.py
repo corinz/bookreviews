@@ -13,8 +13,8 @@ class Book(db.Model):
     year = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String, nullable=False)
 
-    def add_review(self, review, user):
-        r = Review(review=review, book_id=self.id, user_id=user.id)
+    def add_review(review, book_id, user_id):
+        r = Review(review=review, book_id=book_id, user_id=user_id)
         db.session.add(r)
         db.session.commit()
 

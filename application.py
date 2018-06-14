@@ -113,8 +113,50 @@ def searchresults():
     except:
         query_int = -9999
 
-
     # flasksqlalchemy query here
     #books = Book.query.filter_by(title=query)
     books = Book.query.filter(or_(Book.title==query, Book.author==query, Book.year==query_int, Book.isbn==query))
-    return render_template("searchresults.html", books=books)
+
+    # TO DO: Activate search for similar terms
+    #if books == None: # if books is None?
+    #    query = "%"+query+"%"
+    #    books = Book.query.filter(Book.title.like(query))
+
+
+    return render_template("searchresults.html", books=books, query=query)
+
+# Book Page
+@app.route("/book/<int:book_id>")
+def book_id(book_id):
+    global usernm, passwd, loggedIn
+
+    # Get Book and associated reviews
+    book = Book.query.get(book_id)
+    reviews = Review.query.filter_by(book_id=book_id)
+
+    # If book doesnt exist return error page
+    if book is None:
+        return render_template("book.html")
+
+    return render_template("book.html", reviews=reviews, book=book, loggedIn=loggedIn,username=usernm)
+
+# Add review
+@app.route("/addreview", methods=["POST"])
+def addreview():
+    global usernm, passwd, loggedIn
+
+    user = User.query.filter_by(username=usernm).first()
+    user_id = user.id
+
+    if loggedIn == 1:
+        review = request.form.get("review")
+        book_id = request.form.get("book_id")
+        Book.add_review(review=review, book_id=book_id, user_id=user_id)
+    else:
+        return #error page, not logged in
+
+    # Get Book and associated reviews
+    book = Book.query.get(book_id)
+    reviews = Review.query.filter_by(book_id=book_id)
+
+    return render_template("book.html", reviews=reviews, book=book, loggedIn=loggedIn,username=usernm)
