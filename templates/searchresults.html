@@ -19,7 +19,7 @@
                <ul>
                    {% for book in books %}
                        <li>
-                       {{ book.author }} , {{ book.year }}
+                       {{book.title}} by {{ book.author }} <br> Published: {{ book.year }} ISBN: {{book.isbn}}
                        </li>
                    {% endfor %}
                </ul>

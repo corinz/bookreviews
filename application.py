@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request
 from db_models import *
+from sqlalchemy import or_
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ynorvjldptczsr:642db89f29e57eb14c168c81dd9088b79e279edabda65bef8b391d46c31f9d0b@ec2-54-243-137-182.compute-1.amazonaws.com:5432/d1r7oflel96ou"
@@ -107,10 +108,13 @@ def searchresults():
     global usernm, passwd, loggedIn
     query = request.form.get("search_criteria")
 
+    try:
+        query_int = int(query)
+    except:
+        query_int = -9999
+
+
     # flasksqlalchemy query here
-    books = Book.query.filter_by(title=query)
-
-    # old
-    #results = db.execute("SELECT * FROM books WHERE title LIKE :query", {"query":query}).fetchall
-
+    #books = Book.query.filter_by(title=query)
+    books = Book.query.filter(or_(Book.title==query, Book.author==query, Book.year==query_int, Book.isbn==query))
     return render_template("searchresults.html", books=books)
