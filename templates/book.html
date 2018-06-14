@@ -14,18 +14,14 @@
             {% include 'includes/header-nav.html' %}
             <!--Main Body Section & Portrait-->
             <main class="inner cover">
-               <p class="lead">Your search results for "{{query}}" yielded {{numbooks}} results:</p>
-
+               <p class="lead">{{book.title}} Book Page</p>
                <ul>
-                   {% for book in books %}
+                   {% for review in reviews %}
                        <li>
-                         <a href="{{ url_for('book_id', book_id=book.id)}}">{{book.title}} </a>
-                       by {{ book.author }} <br> Published: {{ book.year }} ISBN: {{book.isbn}}
+                         Review: {{review.review}} by {{review.user_id}}
                        </li>
                    {% endfor %}
                </ul>
-
-
             </main>
 
          </div>
